@@ -31,7 +31,55 @@ router.get('/:id', (req, res) => {
         res.status(500).json({message: "Sorry, ran into an error."})
     })
 })
-    
+//works on Postman
+
+router.post('/', (req, res) => {
+    db("accounts")
+    .insert(req.body, "id")
+    .then(ids => {
+        res.status(201).json({results: ids})
+    })
+    .catch(err => {
+        res.status(500).json({message: "Sorry, ran into an error."});
+    });
+});
+//works on Postman
+
+
+router.put('/:id', (req, res) => {
+    const changes = req.body;
+
+    db("accounts")
+    .where({id: req.params.id})
+    .update(changes)
+    .then(count => {
+        if (count > 0) {
+            res.status(200).json({message: "Account updated successfully."});
+        } else {
+            res.status(404).json({message: "Account cannot be found."});
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: "Sorry, ran into an error."});
+    });
+});
+//worked on Postman
+
+router.delete('/:id', (req, res) => {
+    db("accounts")
+    .where({id: req.params.id})
+    .del()
+    .then(count => {
+        if (count > 0) {
+            res.status(200).json({message: "Account deleted successfully."});
+        } else {
+            res.status(404).json({message: "Account cannot be found."});
+        }
+    })
+    .catch(err => {
+        res.status(500).json({message: "Sorry, ran into an error."})
+    })
+})
 //works on Postman
 
 module.exports = router;
